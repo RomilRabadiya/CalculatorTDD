@@ -7,6 +7,8 @@ public class StringCalculator {
             return 0;
         }
 
+        numbers = numbers.replace("\n", ",");
+
         String[] nums = numbers.split(",");
 
         int sum = 0;
