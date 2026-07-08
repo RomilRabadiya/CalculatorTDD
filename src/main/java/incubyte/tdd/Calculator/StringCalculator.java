@@ -1,5 +1,7 @@
 package incubyte.tdd.Calculator;
 
+import java.util.regex.Pattern;
+
 public class StringCalculator {
 
     public int add(String numbers) {
@@ -7,9 +9,18 @@ public class StringCalculator {
             return 0;
         }
 
-        numbers = numbers.replace("\n", ",");
+        String delimiter = ",";
 
-        String[] nums = numbers.split(",");
+        if (numbers.startsWith("//")) {
+
+            delimiter = String.valueOf(numbers.charAt(2));
+
+            numbers = numbers.substring(4);
+        } else {
+            numbers = numbers.replace("\n", ",");
+        }
+
+        String[] nums = numbers.split(Pattern.quote(delimiter));
 
         int sum = 0;
 
