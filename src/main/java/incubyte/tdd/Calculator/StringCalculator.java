@@ -2,14 +2,16 @@ package incubyte.tdd.Calculator;
 
 import java.util.regex.Pattern;
 
+import java.util.Arrays;
 public class StringCalculator {
 
     public int add(String numbers) {
+
         if (numbers.isEmpty()) {
             return 0;
         }
 
-        String delimiter = ",";
+        String delimiterRegex = ",";
 
         if (numbers.startsWith("//")) {
 
@@ -18,9 +20,19 @@ public class StringCalculator {
             String delimiterSection = numbers.substring(2, newLineIndex);
 
             if (delimiterSection.startsWith("[") && delimiterSection.endsWith("]")) {
-                delimiter = delimiterSection.substring(1, delimiterSection.length() - 1);
+
+                String[] delimiters = delimiterSection
+                        .substring(1, delimiterSection.length() - 1)
+                        .split("\\]\\[");
+
+                delimiterRegex = String.join("|",
+                        Arrays.stream(delimiters)
+                                .map(Pattern::quote)
+                                .toArray(String[]::new));
+
             } else {
-                delimiter = delimiterSection;
+
+                delimiterRegex = Pattern.quote(delimiterSection);
             }
 
             numbers = numbers.substring(newLineIndex + 1);
@@ -30,12 +42,18 @@ public class StringCalculator {
             numbers = numbers.replace("\n", ",");
         }
 
-        String[] nums = numbers.split(Pattern.quote(delimiter));
+        String[] nums = numbers.split(delimiterRegex, -1);
 
         int sum = 0;
 
         for (String num : nums) {
-            sum += Integer.parseInt(num);
+
+            if (num.isEmpty()) {
+                throw new IllegalArgumentException("Empty number is not allowed");
+            }
+
+            int value = Integer.parseInt(num);
+            sum+=value;
         }
 
         return sum;
