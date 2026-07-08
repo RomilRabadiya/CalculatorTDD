@@ -15,4 +15,10 @@ class StringCalculatorTest {
     void shouldReturnZeroWhenInputIsEmpty() {
         assertEquals(0, calculator.add(""));
     }
+
+    @Test
+    @DisplayName("ReturnSameNumberWhenSingleNumberIsProvided")
+    void shouldReturnSameNumberWhenSingleNumberIsProvided() {
+        assertEquals(5, calculator.add("5"));
+    }
 }
