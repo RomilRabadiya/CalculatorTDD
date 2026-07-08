@@ -39,4 +39,10 @@ class StringCalculatorTest {
         assertEquals(15, calculator.add("1,2,3,4,5"));
     }
 
+    @Test
+    @DisplayName("SupportNewLineAsDelimiter")
+    void shouldSupportNewLineAsDelimiter() {
+        assertEquals(6, calculator.add("1\n2,3"));
+    }
+
 }
