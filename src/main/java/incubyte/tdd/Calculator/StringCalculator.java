@@ -3,6 +3,10 @@ package incubyte.tdd.Calculator;
 public class StringCalculator {
 
     public int add(String numbers) {
-        return 0;
+        if (numbers.isEmpty()) {
+            return 0;
+        }
+
+        return Integer.parseInt(numbers);
     }
 }
