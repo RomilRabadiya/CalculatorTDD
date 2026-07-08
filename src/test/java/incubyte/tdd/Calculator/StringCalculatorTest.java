@@ -115,39 +115,51 @@ class StringCalculatorTest {
     }
 
     @Test
-    @DisplayName("TC-16: Should throw NumberFormatException for non-numeric input")
+    @DisplayName("TC-16: Should reject non-numeric input")
     void shouldThrowExceptionWhenInputContainsNonNumericValue() {
-        assertThrows(
-                NumberFormatException.class,
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> calculator.add("1,a")
         );
+
+        assertEquals("Invalid number: 'a'", exception.getMessage());
     }
 
     @Test
-    @DisplayName("TC-17: Should throw IllegalArgumentException for consecutive delimiters")
+    @DisplayName("TC-17: Should reject consecutive delimiters")
     void shouldThrowExceptionWhenInputContainsEmptyToken() {
-        assertThrows(
+
+        IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> calculator.add("1,,2")
         );
+
+        assertEquals("Input cannot contain empty numbers.", exception.getMessage());
     }
 
     @Test
-    @DisplayName("TC-18: Should throw IllegalArgumentException when input starts with a delimiter")
+    @DisplayName("TC-18: Should reject input starting with a delimiter")
     void shouldThrowExceptionWhenInputStartsWithDelimiter() {
-        assertThrows(
+
+        IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> calculator.add(",1")
         );
+
+        assertEquals("Input cannot start with a delimiter.", exception.getMessage());
     }
 
     @Test
-    @DisplayName("TC-19: Should throw IllegalArgumentException when input ends with a delimiter")
+    @DisplayName("TC-19: Should reject input ending with a delimiter")
     void shouldThrowExceptionWhenInputEndsWithDelimiter() {
-        assertThrows(
+
+        IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> calculator.add("1,")
         );
+
+        assertEquals("Input cannot end with a delimiter.", exception.getMessage());
     }
 
     @Test
@@ -157,5 +169,137 @@ class StringCalculatorTest {
         assertEquals(5, calculator.add("5"));
         assertEquals(0, calculator.add(""));
         assertEquals(5, calculator.add("2,3"));
+    }
+
+    @Test
+    @DisplayName("TC-21: Should reject decimal numbers")
+    void shouldThrowExceptionForDecimalNumbers() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("1.5,2")
+        );
+
+        assertEquals("Invalid number: '1.5'", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-22: Should reject alphabetic input")
+    void shouldThrowExceptionForAlphabeticInput() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("abc")
+        );
+
+        assertEquals("Invalid number: 'abc'", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-23: Should reject input containing only a delimiter")
+    void shouldThrowExceptionForOnlyDelimiter() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add(",")
+        );
+
+        assertEquals("Input cannot contain empty numbers.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-24: Should reject input containing only a newline")
+    void shouldThrowExceptionForOnlyNewLine() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("\n")
+        );
+
+        assertEquals("Input cannot contain empty numbers.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-25: Should reject consecutive newline delimiters")
+    void shouldThrowExceptionForConsecutiveNewLines() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("1\n\n2")
+        );
+
+        assertEquals("Input cannot contain consecutive newline delimiters.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-26: Should reject newline when a custom delimiter is specified")
+    void shouldRejectNewLineWhenCustomDelimiterIsSpecified() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("//;\n1\n2")
+        );
+
+        assertEquals(
+                "Avoid newline when a custom delimiter is specified.",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    @DisplayName("TC-27: Should reject custom delimiter declaration without numbers")
+    void shouldThrowExceptionWhenNoNumbersAfterCustomDelimiter() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("//;\n")
+        );
+
+        assertEquals("No numbers found after custom delimiter declaration.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-28: Should reject consecutive custom delimiters")
+    void shouldThrowExceptionForConsecutiveCustomDelimiters() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("//[*][%]\n1*%2")
+        );
+
+        assertEquals("Input cannot contain empty numbers.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("TC-29: Should reject custom delimiter declaration without '//' prefix")
+    void shouldRejectCustomDelimiterWithoutPrefix() {
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("[***]\n1***2")
+        );
+
+        assertEquals(
+                "Custom delimiter declaration must start with '//'.",
+                exception.getMessage()
+        );
+    }
+
+    @Test
+    @DisplayName("TC-30: Should support long custom delimiters")
+    void shouldSupportLongCustomDelimiter() {
+        assertEquals(
+                3,
+                calculator.add("//[abcdef]\n1abcdef2")
+        );
+    }
+
+    @Test
+    @DisplayName("TC-31: Should support three custom delimiters")
+    void shouldSupportThreeCustomDelimiters() {
+        assertEquals(
+                10,
+                calculator.add("//[a][b][c]\n1a2b3c4")
+        );
     }
 }

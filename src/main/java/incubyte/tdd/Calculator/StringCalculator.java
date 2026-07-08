@@ -37,9 +37,41 @@ public class StringCalculator {
 
             numbers = numbers.substring(newLineIndex + 1);
 
-        } else {
+            if(numbers.isEmpty())
+            {
+                throw new IllegalArgumentException("No numbers found after custom delimiter declaration.");
+            }
+
+            if(numbers.contains("\n"))
+            {
+                throw  new IllegalArgumentException("Avoid newline when a custom delimiter is specified.");
+            }
+
+        }
+        else if (numbers.startsWith("[") && !numbers.startsWith("//[")) {
+            throw new IllegalArgumentException(
+                    "Custom delimiter declaration must start with '//'."
+            );
+        }
+        else {
+            if (numbers.contains("\n\n")) {
+                throw new IllegalArgumentException(
+                        "Input cannot contain consecutive newline delimiters."
+                );
+            }
 
             numbers = numbers.replace("\n", ",");
+        }
+        if(numbers.startsWith(delimiterRegex) && numbers.endsWith(delimiterRegex))
+        {
+            throw new IllegalArgumentException("Input cannot contain empty numbers.");
+        }
+        else if (numbers.startsWith(delimiterRegex)) {
+            throw new IllegalArgumentException("Input cannot start with a delimiter.");
+        }
+        else if(numbers.endsWith(delimiterRegex))
+        {
+            throw  new IllegalArgumentException("Input cannot end with a delimiter.");
         }
 
         String[] nums = numbers.split(delimiterRegex, -1);
@@ -49,11 +81,16 @@ public class StringCalculator {
         for (String num : nums) {
 
             if (num.isEmpty()) {
-                throw new IllegalArgumentException("Empty number is not allowed");
+                throw new IllegalArgumentException("Input cannot contain empty numbers.");
             }
-
-            int value = Integer.parseInt(num);
-            sum+=value;
+            try
+            {
+                int value = Integer.parseInt(num);
+                sum+=value;
+            }
+            catch (NumberFormatException e) {
+                throw new NumberFormatException("Invalid number: '" + num + "'");
+            }
         }
 
         return sum;
