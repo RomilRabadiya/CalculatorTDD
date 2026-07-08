@@ -51,4 +51,10 @@ class StringCalculatorTest {
         assertEquals(3, calculator.add("//;\n1;2"));
     }
 
+    @Test
+    @DisplayName("SupportMultipleNumbersWithCustomDelimiter")
+    void shouldSupportMultipleNumbersWithCustomDelimiter() {
+        assertEquals(10, calculator.add("//;\n1;2;3;4"));
+    }
+
 }
