@@ -27,4 +27,10 @@ class StringCalculatorTest {
         assertEquals(0, calculator.add("0"));
     }
 
+    @Test
+    @DisplayName("ReturnSumWhenTwoNumbersAreProvided")
+    void shouldReturnSumWhenTwoNumbersAreProvided() {
+        assertEquals(3, calculator.add("1,2"));
+    }
+
 }
