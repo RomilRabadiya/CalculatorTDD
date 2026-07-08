@@ -57,4 +57,10 @@ class StringCalculatorTest {
         assertEquals(10, calculator.add("//;\n1;2;3;4"));
     }
 
+    @Test
+    @DisplayName("SupportDelimiterOfAnyLength")
+    void shouldSupportDelimiterOfAnyLength() {
+        assertEquals(6, calculator.add("//[***]\n1***2***3"));
+    }
+
 }
