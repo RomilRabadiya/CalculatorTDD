@@ -13,10 +13,20 @@ public class StringCalculator {
 
         if (numbers.startsWith("//")) {
 
-            delimiter = String.valueOf(numbers.charAt(2));
+            int newLineIndex = numbers.indexOf('\n');
 
-            numbers = numbers.substring(4);
+            String delimiterSection = numbers.substring(2, newLineIndex);
+
+            if (delimiterSection.startsWith("[") && delimiterSection.endsWith("]")) {
+                delimiter = delimiterSection.substring(1, delimiterSection.length() - 1);
+            } else {
+                delimiter = delimiterSection;
+            }
+
+            numbers = numbers.substring(newLineIndex + 1);
+
         } else {
+
             numbers = numbers.replace("\n", ",");
         }
 
